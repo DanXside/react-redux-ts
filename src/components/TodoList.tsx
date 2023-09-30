@@ -5,11 +5,12 @@ import { useActionCreator } from "./hooks/useActionCreator";
 
 const TodoList: React.FC = () => {
     const {error, limit, loading, page, todos} = useTypedSelector(state => state.todo);
-    const {fetchTodos} = useActionCreator();
+    const pages = [1, 2, 3, 4, 5];
+    const {fetchTodos, setPageTodo} = useActionCreator();
 
     useEffect(() => {
-        fetchTodos();
-    }, []);
+        fetchTodos(page, limit);
+    }, [page]);
 
     if (loading) {
         return <h1>Идёт загрузка...</h1>
@@ -21,9 +22,20 @@ const TodoList: React.FC = () => {
 
     return (
         <div>
-            {todos.map(todo => (
-                <div key={todo.id}>{todo.id} - {todo.name}</div>
-            ))}
+            <div style={{marginTop: '40px'}}>
+                {todos.map(todo => (
+                    <div key={todo.id}>{todo.id} - {todo.title}</div>
+                ))}
+            </div>
+            <div style={{display: 'flex', gap: '20px', marginTop: '60px'}}>
+                {pages.map(p => (
+                    <div onClick={() => setPageTodo(p)}
+                        style={{border: p === page ? '1px solid red' : '1px solid black', width: '30px', cursor: 'pointer'}}
+                    >
+                        {p}
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
